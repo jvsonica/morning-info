@@ -2,18 +2,15 @@ import requests
 import datetime
 from weather.icons import icons
 
+
 URL = 'https://wttr.in'
 CITY = 'Oporto'
 
-
-def safe_get(object, keys, default=None):
-    current_dict = object.copy()
-    try:
-        for key in keys:
-            current_dict = current_dict[key]
-    except (KeyError, TypeError):
-        return default
-    return current_dict if current_dict is not None else default
+def format(forecasts):
+    return '\n'.join([
+       f'{p['day']} at {p['hour']}:00   🌡 {p['temperature']}°  💧 {p['precipMM']}mm  {p['icon']}  {p['description']}'
+        for p in forecasts
+    ])
 
 
 def fetch_weather():
@@ -48,3 +45,8 @@ def fetch_weather():
             })
 
     return previsions
+
+def display():
+    w = fetch_weather()
+    print(format(w))
+ 

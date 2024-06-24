@@ -1,6 +1,7 @@
-from weather import fetch_weather
+import weather
+import bus
 
-predictions = fetch_weather()
+weather.display()
+print()
+bus.display()
 
-for p in predictions:
-    print(f'{p['icon']}   {p['day']} at {p['hour']}:00   {p['description']}   🌡 {p['temperature']}°  💧 {p['precipMM']}mm')
