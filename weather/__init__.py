@@ -6,11 +6,8 @@ from weather.icons import icons
 URL = 'https://wttr.in'
 CITY = 'Oporto'
 
-def format(forecasts):
-    return '\n'.join([
-       f"{p['day']} at {p['hour']}:00   🌡 {p['temperature']}°  💧 {p['precipMM']}mm  {p['icon']}  {p['description']}"
-        for p in forecasts
-    ])
+def format(p):
+    return f"{p['day']} at {p['hour']}:00   🌡 {p['temperature']}°  💧 {p['precipMM']}mm  {p['icon']}  {p['description']}"
 
 
 def fetch_weather():
@@ -25,7 +22,7 @@ def fetch_weather():
     previsions = []
     for day in content['weather']:
         for hour in day['hourly']:
-            if len(previsions) > 6:
+            if len(previsions) >= 5:
                 break
 
             if day['date'] == current_date and current_hour > int(hour['time']):
@@ -47,6 +44,6 @@ def fetch_weather():
     return previsions
 
 def display():
-    w = fetch_weather()
-    print(format(w))
+    weather = fetch_weather()
+    print("\n".join([format(w) for w in weather]))
  

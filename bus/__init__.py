@@ -7,21 +7,29 @@ warnings.simplefilter('ignore', InsecureRequestWarning)
 
 URL = "https://www.stcp.pt/pt/itinerarium/soapclient.php"
 
-SCHEDULE_CHECKS = {
-    "TLHR1": [600]
-}
+SCHEDULE_CHECKS = [
+    { 
+        "stop": "AML3",
+        "lines": [205],
+        "hash": "73rrHNI-jqSXT5EVlLcCCCZXt4ThmOLcZqpJD_6qIFE"
+    },
+    {
+        "stop": "TLHR1",
+        "lines": [600, 704],
+        "hash": "XBvI-jkLEsHXkOfd1lfhbfnOPd9mF31yQVddUIgEbH8"
+    }
+]
 
-# No idea what this is, but request needs it, maybe for rate-limiting?
-HASH = "XBvI-jkLEsHXkOfd1lfhbfnOPd9mF31yQVddUIgEbH8"
- 
 def fetch_next_buses():
     next_buses = []
-    for stop, lines in SCHEDULE_CHECKS.items():
-        for line in lines:
-            querystring = {"codigo": stop, "linha": line, "hash123": HASH }
+    for schedule in SCHEDULE_CHECKS:
+        for line in schedule['lines']:
+            querystring = {"codigo": schedule['stop'], "linha": line, "hash123": schedule['hash'] }
             response = requests.request("GET", URL, params=querystring, verify=False)
-            next_buses.extend(parse_content(response.text))
-    return next_buses
+            sched_results = [ { **entry, 'stop': schedule['stop']} for entry in parse_content(response.text)]
+            next_buses.extend(sched_results)
+    sorted_next_buses = sorted(next_buses, key=lambda bus: -1 if bus['wait_time'] == '' else int(bus['wait_time'].replace('min', '')))
+    return sorted_next_buses[:5]
 
 def parse_content(content):
     try:
@@ -41,13 +49,10 @@ def parse_content(content):
         print('Error connecting to itinerarium API', err)
         return []
 
-def format(forecasts):
-    return '\n'.join([
-        f'🚌 Line {bus["line"]}  ⏳ {bus["wait_time"]}  ({bus["predicted"]})'
-        for bus in forecasts
-    ])
+def format(bus):
+    return f'🚌 Line {bus["line"]} 🚏 {bus["stop"]} ⏳ {bus["wait_time"]}  ({bus["predicted"]})'
 
 def display():
-    w = fetch_next_buses()
-    print(format(w))
+    next_buses = fetch_next_buses()
+    print("\n".join([format(bus) for bus in next_buses]))
  
