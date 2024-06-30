@@ -10,6 +10,10 @@ the latest information and exit:
 ![View when called from shell](./examples/shell.png "Shell")
 
 You can also expose this as a server with `python server.py`.
+I have this server running on my Raspberry Pi so I can know whether I should take an
+umbrella with me and how late I am every morning!
+
+![Raspberry Pi view](./examples/pi.png "Pi")
 
 ## Customizing
 
