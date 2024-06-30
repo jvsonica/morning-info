@@ -8,7 +8,7 @@ CITY = 'Oporto'
 
 def format(forecasts):
     return '\n'.join([
-       f'{p['day']} at {p['hour']}:00   🌡 {p['temperature']}°  💧 {p['precipMM']}mm  {p['icon']}  {p['description']}'
+       f"{p['day']} at {p['hour']}:00   🌡 {p['temperature']}°  💧 {p['precipMM']}mm  {p['icon']}  {p['description']}"
         for p in forecasts
     ])
 

@@ -14,7 +14,7 @@ def api():
         return { 'weather': w, 'bus': b }
    
     bus_info = "".join([
-        f'<p>🚌 Line {p["line"]}  ⏳ {p["wait_time"]}  ({p["predicted"]})</p>'
+        f"<p>🚌 Line {p['line']}  ⏳ {p['wait_time']}  ({p['predicted']})</p>"
         for p in b   
     ])
     weather_info = "".join([
